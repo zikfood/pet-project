@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c42914a32d4c4a589dec488cb2b97543, type: 3}
+  m_Name: StaticData
+  m_EditorClassIdentifier: 
+  UnitPrefab: {fileID: 3270113708672214470, guid: ce4941124d170ee4591f794e44193cd3, type: 3}
+  EnemyPrefab: {fileID: 3270113708672214470, guid: fbcadbead8ac31349a9fa5446d48a0cd, type: 3}
+  AttackPrefab: {fileID: 4571805082412610737, guid: 67e8e5c678a19f042bd02026df4e73b7, type: 3}
+  GlobalGravitation: {x: 0, y: 0, z: 0}
+  UnitMoveLenght: 0
