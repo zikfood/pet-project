@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace Systems.MoveSystems
 {
-    public class MoveSystem : IEcsRunSystem
+    public class CheckCollisionOnMoveSystem : IEcsRunSystem
     {
-        private EcsFilter<Velocity, RigidbodyLink> _filter = null;
+        private EcsFilter<Velocity, RigidbodyLink, CheckCollisionOnMove> _filter = null;
 
         public void Run()
         {

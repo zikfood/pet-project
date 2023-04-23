@@ -10,6 +10,7 @@ using UnityComponents.Common;
 using UnityEngine;
 using Leopotam.Ecs.Ui.Systems;
 using Systems.InputSystems;
+using Systems.UiSystems;
 
 sealed class EcsStartup : MonoBehaviour
 {
@@ -29,8 +30,7 @@ sealed class EcsStartup : MonoBehaviour
 	private EcsSystems _fixedSystem;
 	
 	private PauseService _pauseService;
-	private ScoreService _scoreService;
-	
+
 	private int _spawnSystems;
 	private int _coreGameplaySystems;
 	private int _movableSystems;
@@ -72,17 +72,13 @@ sealed class EcsStartup : MonoBehaviour
 	{
 		EcsSystems inputSystems = InputSystems();
 		EcsSystems spawnSystems = SpawnSystems(Spawn);
-		EcsSystems uiSystems = UISystems();
 		
 		_systems
-			.Add(uiSystems)
 			.Add(inputSystems)
 			.Add(spawnSystems)
 			.Inject(_staticData)
 			.Inject(_sceneData)
 			.Inject(_pauseService)
-			.Inject(_scoreService)
-			.InjectUi(_uiEmitter)
 			.Init();
 	}
 	
@@ -90,8 +86,10 @@ sealed class EcsStartup : MonoBehaviour
 	{
 		EcsSystems coreSystems = CoreGameplaySystems(Coregameplay);
 		EcsSystems movableSystems = MovableSystems(Movable);
+		EcsSystems uiSystems = UISystems();
 
 		_fixedSystem
+			.Add(uiSystems)
 			.Add(coreSystems)
 			.Add(movableSystems)
 			.OneFrame<OnCollisionEnterEvent>()
@@ -99,14 +97,13 @@ sealed class EcsStartup : MonoBehaviour
 			.Inject(_sceneData)
 			.Inject(_staticData)
 			.Inject(_pauseService)
-			.Inject(_scoreService)
+			.InjectUi(_uiEmitter)
 			.Init();
 	}
 	
 	private void InitializedServices()
 	{
 		_pauseService = new PauseService(false);
-		_scoreService = new ScoreService();
 	}
 	
 	private void CalcSystemIndexes()
@@ -168,7 +165,8 @@ sealed class EcsStartup : MonoBehaviour
 	
 	private EcsSystems UISystems()
 	{
-		return new EcsSystems(_world);
+		return new EcsSystems(_world)
+			.Add(new UpdateScoreSystem());
 	}
 	
 	private EcsSystems SpawnSystems(string name)
@@ -193,7 +191,7 @@ sealed class EcsStartup : MonoBehaviour
 			.Add(new EnemyFollowSystem())
 			.Add(new GravitationSystem())
 			.Add(new MoveForwardSystem())
-			.Add(new MoveSystem())
+			.Add(new CheckCollisionOnMoveSystem())
 			.Add(new UpdateRigidbodyPosition());
 	}
 
@@ -205,8 +203,9 @@ sealed class EcsStartup : MonoBehaviour
 			.Add(new SpawnMeleeAttackSystem())
 			.Add(new DamageOnTriggerEnterSystem())
 			.Add(new DamageSystem())
-			.Add(new DeadSystem())
 			.Add(new PickUpSystem())
+			.Add(new UpdateScoreSystem())
+			.Add(new DeadSystem())
 			.OneFrame<PickUpEvent>()
 			.OneFrame<EnemyCloseEvent>()
 			.OneFrame<OnCollisionEnterEvent>()
